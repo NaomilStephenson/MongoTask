@@ -324,12 +324,44 @@ function NameSearchFunction(){
 
 function CustomSortFunction(){
     /// ## This whole function is EXTENSION ##
+    let filter = null
+    let sort = null
     // ask for the attribute they wish to sort by
+    let sortChoice = null
+    while(sortChoice == null) {
+        console.log("You can sort the database by:")
+        console.log("N - Name")
+        console.log("A - Age")
+        console.log("H - Height")
+        console.log("J - Job")
+        filter = input("What would you like to sort by? ")
+        if (filter == "N" || filter == "A" || filter == "H" || filter == "J") {
+            sortChoice = verified
+        } else {
+            console.log("That option does not exist")
+            console.log("")
+        }
+    }
     // ask for whether the sort is ascending or descending
-    
+    let sortOrder = null
+    while(sortOrder == null) {
+        sort = input("Would you like to search in an Ascending or Descending order? (A or D) ")
+        if (sort == "A" || sort == "D" ) {
+            sortOrder = verified
+        } else {
+            console.log("That option does not exist")
+            console.log("")
+        }
+    }    
     // find all people
-    // sort by choosen attribute
-    // print all people found
+    peopleModel.find().then(results => {
+        // sort by choosen attribute
+        // print all people found
+    }).finally (() =>{
+        // Loop back to main menu
+        MainMenu()
+    })
+
 
     // There are few hints here, all extension
     // look into "aggregation"
