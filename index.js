@@ -323,67 +323,49 @@ function NameSearchFunction(){
 }
 
 function CustomSortFunction(){
-    /// ## This whole function is EXTENSION ##
-    // ask for the attribute they wish to sort by          // Do not continue unless vaild answer (SubMenu)
 
-    let vaild_attribute = null
-    while (vaild_attribute == null){
-
-        console.log("name, age, height, job")
-        const attribute = input("Which attribute to sort by? ").toLowerCase()
-
-        if (["name","age","height","job"].indexOf(attribute) !== -1){
-            vaild_attribute = attribute
+    // ask for the attribute they wish to sort by
+    let sorter = null
+    while (sorter == null){
+        console.log("You can sort the database entries by:")
+        console.log("Name")
+        console.log("Age")
+        console.log("Height or")
+        console.log("Job")
+        const sortChoice = input("What would you like to sort by? ").toLowerCase()
+        if (["name","age","height","job"].indexOf(sortChoice) !== -1){
+            sorter = sortChoice
             break;
 
         }else{
-            console.log("Invaild attribute!")
+            console.log("That is not a valid sort option")
         }
 
     }
 
-    // console.log("name, age, height, job")
-    // const attribute = input("Which attribute to sort by? ").toLowerCase()
-    // if (!(attribute in ["name","age","height","job"])){
-    //     CustomSortFunction()
-    // }
-
-    // ask for whether the sort is ascending or descending // Do not continue unless vaild answer (SubMenu)
-    let vaild_order = null
-    while (vaild_order == null){
-        console.log("ascending or descending? ")
-        const order = input("1 for asecding, -1 for descending? ")
-
-        // exit the loop once vaild
-        // say an error message if invaild
-        switch(order){
-            case "1":
-                vaild_order = "ascending"
-                break; // for the switch only
-            case "-1":
-                vaild_order = "descending"
+    // ask for whether the sort is ascending or descending
+    let order = null
+    while (order == null){
+        const OrderChoice = input("Ascending or Descending? (A or D) ")
+        switch(OrderChoice){
+            case "A":
+                order = "ascending"
+                break;
+            case "D":
+                order = "descending"
                 break;
             default:
-                console.log("Invaild Option")
+                console.log("Invaild sort option Selected")
         }
     }
-    // mongodb .sort( {attributeName: "ascending"/"descending"} )
-    // mongodb .sort( {attribute: vaild_order} )
 
-    let sortObject = JSON.Parse(`${attribute}:${vaild_order}`)
+    let sortOrder = JSON.Parse(`${sorter}:${order}`)
 
-    // sortObject.name = "andrew"
-    // console.log(sortObject.name)    // andrew
-    // console.log(sortObject["name"]) // andrew
-    // console.log(`My name is ${sortObject.name}`) // My name is andrew
-
-    // sortObject[vaild_attribute] = vaild_order
-
-    // find all people // sort by choosen attribute
-    peopleModel.find().sort(sortObject).then(peopleSorted => {
+    // find all people & sort by choosen attribute
+    peopleModel.find().sort(sortOrder).then(results => {
         // print all people found
-        for (let p of peopleSorted){
-            console.log(p)
+        for (let person of results){
+            console.log(person)
         }
         MainMenu()
     })    
