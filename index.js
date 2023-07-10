@@ -324,45 +324,67 @@ function NameSearchFunction(){
 
 function CustomSortFunction(){
     /// ## This whole function is EXTENSION ##
-    let filter = null
-    let sort = null
-    // ask for the attribute they wish to sort by
-    let sortChoice = null
-    while(sortChoice == null) {
-        console.log("You can sort the database by:")
-        console.log("N - Name")
-        console.log("A - Age")
-        console.log("H - Height")
-        console.log("J - Job")
-        filter = input("What would you like to sort by? ")
-        if (filter == "N" || filter == "A" || filter == "H" || filter == "J") {
-            sortChoice = verified
-        } else {
-            console.log("That option does not exist")
-            console.log("")
+    // ask for the attribute they wish to sort by          // Do not continue unless vaild answer (SubMenu)
+
+    let vaild_attribute = null
+    while (vaild_attribute == null){
+
+        console.log("name, age, height, job")
+        const attribute = input("Which attribute to sort by? ").toLowerCase()
+
+        if (["name","age","height","job"].indexOf(attribute) !== -1){
+            vaild_attribute = attribute
+            break;
+
+        }else{
+            console.log("Invaild attribute!")
+        }
+
+    }
+
+    // console.log("name, age, height, job")
+    // const attribute = input("Which attribute to sort by? ").toLowerCase()
+    // if (!(attribute in ["name","age","height","job"])){
+    //     CustomSortFunction()
+    // }
+
+    // ask for whether the sort is ascending or descending // Do not continue unless vaild answer (SubMenu)
+    let vaild_order = null
+    while (vaild_order == null){
+        console.log("ascending or descending? ")
+        const order = input("1 for asecding, -1 for descending? ")
+
+        // exit the loop once vaild
+        // say an error message if invaild
+        switch(order){
+            case "1":
+                vaild_order = "ascending"
+                break; // for the switch only
+            case "-1":
+                vaild_order = "descending"
+                break;
+            default:
+                console.log("Invaild Option")
         }
     }
-    // ask for whether the sort is ascending or descending
-    let sortOrder = null
-    while(sortOrder == null) {
-        sort = input("Would you like to search in an Ascending or Descending order? (A or D) ")
-        if (sort == "A" || sort == "D" ) {
-            sortOrder = verified
-        } else {
-            console.log("That option does not exist")
-            console.log("")
-        }
-    }    
-    // find all people
-    peopleModel.find().then(results => {
-        // sort by choosen attribute
+    // mongodb .sort( {attributeName: "ascending"/"descending"} )
+    // mongodb .sort( {attribute: vaild_order} )
+
+    let sortObject = JSON.Parse(`${attribute}:${vaild_order}`)
+
+    // sortObject.name = "andrew"
+    // console.log(sortObject.name)    // andrew
+    // console.log(sortObject["name"]) // andrew
+    // console.log(`My name is ${sortObject.name}`) // My name is andrew
+
+    // sortObject[vaild_attribute] = vaild_order
+
+    // find all people // sort by choosen attribute
+    peopleModel.find().sort(sortObject).then(peopleSorted => {
         // print all people found
-    }).finally (() =>{
-        // Loop back to main menu
+        for (let p of peopleSorted){
+            console.log(p)
+        }
         MainMenu()
-    })
-
-
-    // There are few hints here, all extension
-    // look into "aggregation"
+    })    
 }
